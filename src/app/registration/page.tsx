@@ -17,13 +17,14 @@ import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPatient } from "@/services/actions/registration";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { TLogin, userLogin } from "@/services/actions/login";
+import { storeUserInfo } from "@/services/actions/authService";
 
 const page = () => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -31,8 +32,19 @@ const page = () => {
     try {
       const res = await registerPatient(values);
       if (res?.data?.id) {
-        toast.success("Patient registration successfully!");
-        router.push("/login");
+        const res = await userLogin({
+          email: data.patient.email,
+          password: data.password,
+        });
+        if (res?.success) {
+          if (res?.data?.accessToken) {
+            storeUserInfo({ accessToken: res.data.accessToken });
+          }
+          toast.success("Patient registration successfully!");
+          router.push("/");
+        } else {
+          toast.error(res.message);
+        }
       }
     } catch (err: any) {
       console.error(err.message);

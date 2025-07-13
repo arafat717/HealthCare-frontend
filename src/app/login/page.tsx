@@ -17,6 +17,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { TLogin, userLogin } from "@/services/actions/login";
+import { storeUserInfo } from "@/services/actions/authService";
 
 const page = () => {
   const router = useRouter();
@@ -28,13 +29,17 @@ const page = () => {
   const onSubmit: SubmitHandler<TLogin> = async (data) => {
     try {
       const res = await userLogin(data);
-      console.log(res);
       if (res?.success) {
+        if (res?.data?.accessToken) {
+          storeUserInfo({ accessToken: res.data.accessToken });
+        }
         toast.success("Patient Login successfully!");
         router.push("/");
+      } else {
+        toast.error(res.message);
       }
     } catch (err: any) {
-      console.error(err.message);
+      toast.error(err.message);
     }
   };
 
