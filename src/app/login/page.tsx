@@ -1,32 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import assets from "@/assets";
 import Link from "next/link";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { TLogin, userLogin } from "@/services/actions/login";
+import { userLogin } from "@/services/actions/login";
 import { storeUserInfo } from "@/services/actions/authService";
+import HForm from "@/components/shared/Form/HForm";
+import HInput from "@/components/shared/Form/HInput";
 
 const page = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TLogin>();
-  const onSubmit: SubmitHandler<TLogin> = async (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await userLogin(data);
       if (res?.success) {
@@ -77,29 +66,25 @@ const page = () => {
               </Typography>
             </Box>
           </Stack>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <HForm onSubmit={onSubmit}>
             <Box>
               <Grid container spacing={2}>
                 <Grid size={{ md: 6 }}>
-                  <TextField
+                  <HInput
                     fullWidth={true}
                     size="small"
-                    id="outlined-basic"
                     type="email"
                     label="Email"
-                    {...register("email")}
-                    variant="outlined"
+                    name="email"
                   />
                 </Grid>
                 <Grid size={{ md: 6 }}>
-                  <TextField
+                  <HInput
                     fullWidth={true}
                     size="small"
-                    id="outlined-basic"
                     type="password"
                     label="Password"
-                    {...register("password")}
-                    variant="outlined"
+                    name="password"
                   />
                 </Grid>
               </Grid>
@@ -116,7 +101,7 @@ const page = () => {
                 </Link>
               </Typography>
             </Box>
-          </form>
+          </HForm>
         </Box>
       </Stack>
     </Container>
