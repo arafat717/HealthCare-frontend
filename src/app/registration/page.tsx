@@ -1,14 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import assets from "@/assets";
 import Link from "next/link";
@@ -17,16 +9,39 @@ import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPatient } from "@/services/actions/registration";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { TLogin, userLogin } from "@/services/actions/login";
+import { userLogin } from "@/services/actions/login";
 import { storeUserInfo } from "@/services/actions/authService";
+import HForm from "@/components/shared/Form/HForm";
+import HInput from "@/components/shared/Form/HInput";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+export const patientValidationSchema = z.object({
+  name: z.string().min(1, "Please enter your name!"),
+  email: z.string().email("Please enter a valid email address!"),
+  contactNumber: z
+    .string()
+    .regex(/^\d{11}$/, "Please provide a valid phone number!"),
+  address: z.string().min(1, "Please enter your address!"),
+});
+
+export const validationSchema = z.object({
+  password: z.string().min(6, "Must be at least 6 characters!"),
+  patient: patientValidationSchema,
+});
+
+export const defaultValues = {
+  password: "",
+  patient: {
+    name: "",
+    email: "",
+    contactNumber: "",
+    address: "",
+  },
+};
 
 const page = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const values = modifyPayload(data);
     try {
@@ -85,62 +100,45 @@ const page = () => {
               </Typography>
             </Box>
           </Stack>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <HForm
+            onSubmit={onSubmit}
+            resolver={zodResolver(validationSchema)}
+            defaultValues={defaultValues}
+          >
             <Box>
               <Grid container spacing={2}>
                 <Grid size={{ md: 12 }} mt={2}>
-                  <TextField
-                    fullWidth={true}
-                    size="small"
-                    id="outlined-basic"
-                    type="text"
-                    label="Name"
-                    variant="outlined"
-                    {...register("patient.name")}
-                  />
+                  <HInput fullWidth={true} label="Name" name="patient.name" />
                 </Grid>
                 <Grid size={{ md: 6 }}>
-                  <TextField
+                  <HInput
                     fullWidth={true}
-                    size="small"
-                    id="outlined-basic"
                     type="email"
                     label="Email"
-                    variant="outlined"
-                    {...register("patient.email")}
+                    name="patient.email"
                   />
                 </Grid>
                 <Grid size={{ md: 6 }}>
-                  <TextField
+                  <HInput
                     fullWidth={true}
-                    size="small"
                     type="password"
-                    id="outlined-basic"
                     label="Password"
-                    variant="outlined"
-                    {...register("password")}
+                    name="password"
                   />
                 </Grid>
                 <Grid size={{ md: 6 }}>
-                  <TextField
+                  <HInput
                     fullWidth={true}
-                    size="small"
-                    id="outlined-basic"
                     type="tel"
                     label="Contact Number"
-                    variant="outlined"
-                    {...register("patient.contactNumber")}
+                    name="patient.contactNumber"
                   />
                 </Grid>
                 <Grid size={{ md: 6 }}>
-                  <TextField
+                  <HInput
                     fullWidth={true}
-                    size="small"
-                    id="outlined-basic"
-                    type="text"
                     label="Address"
-                    variant="outlined"
-                    {...register("patient.address")}
+                    name="patient.address"
                   />
                 </Grid>
               </Grid>
@@ -154,7 +152,7 @@ const page = () => {
                 </Link>
               </Typography>
             </Box>
-          </form>
+          </HForm>
         </Box>
       </Stack>
     </Container>

@@ -12,6 +12,13 @@ import { userLogin } from "@/services/actions/login";
 import { storeUserInfo } from "@/services/actions/authService";
 import HForm from "@/components/shared/Form/HForm";
 import HInput from "@/components/shared/Form/HInput";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const LoginUserValidation = z.object({
+  email: z.string().email("Please provide a valid email!"),
+  password: z.string().min(6, "Must be at least 6 characters!"),
+});
 
 const page = () => {
   const router = useRouter();
@@ -66,7 +73,14 @@ const page = () => {
               </Typography>
             </Box>
           </Stack>
-          <HForm onSubmit={onSubmit}>
+          <HForm
+            onSubmit={onSubmit}
+            resolver={zodResolver(LoginUserValidation)}
+            defaultValues={{
+              email: "",
+              password: "",
+            }}
+          >
             <Box>
               <Grid container spacing={2}>
                 <Grid size={{ md: 6 }}>
