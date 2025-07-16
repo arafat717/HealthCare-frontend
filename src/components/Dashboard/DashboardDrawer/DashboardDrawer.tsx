@@ -44,6 +44,9 @@ export default function DashboardDrawer({
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          background: "#F4F7FE",
+          boxShadow: 0,
+          borderBottom: "1px solid lightgray",
         }}
       >
         <Toolbar>
@@ -52,13 +55,28 @@ export default function DashboardDrawer({
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: { sm: "none" }, color: "primary.main" }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
+          <Box>
+            <Typography
+              variant="body2"
+              noWrap
+              component="div"
+              sx={{ color: "gray" }}
+            >
+              Hi, Arafat Hossen
+            </Typography>
+            <Typography
+              variant="body2"
+              noWrap
+              component="div"
+              sx={{ color: "primary.main" }}
+            >
+              Welcome To, HealthCare
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
