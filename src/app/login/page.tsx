@@ -9,11 +9,12 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { userLogin } from "@/services/actions/login";
-import { storeUserInfo } from "@/services/actions/authService";
+import { getUserInfo, storeUserInfo } from "@/services/actions/authService";
 import HForm from "@/components/shared/Form/HForm";
 import HInput from "@/components/shared/Form/HInput";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 
 const LoginUserValidation = z.object({
   email: z.string().email("Please provide a valid email!"),
@@ -30,7 +31,7 @@ const page = () => {
           storeUserInfo({ accessToken: res.data.accessToken });
         }
         toast.success("Patient Login successfully!");
-        router.push("/");
+        router.push(`/dashboard`);
       } else {
         toast.error(res.message);
       }
@@ -106,7 +107,7 @@ const page = () => {
                 Forgot Password?
               </Typography>
               <Button type="submit" sx={{ marginTop: "15px" }} fullWidth={true}>
-                Registration
+                Login
               </Button>
               <Typography mt={2} textAlign="center">
                 Don't have any account?{" "}

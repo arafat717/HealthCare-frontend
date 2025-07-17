@@ -10,11 +10,12 @@ import { registerPatient } from "@/services/actions/registration";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { userLogin } from "@/services/actions/login";
-import { storeUserInfo } from "@/services/actions/authService";
+import { getUserInfo, storeUserInfo } from "@/services/actions/authService";
 import HForm from "@/components/shared/Form/HForm";
 import HInput from "@/components/shared/Form/HInput";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 
 export const patientValidationSchema = z.object({
   name: z.string().min(1, "Please enter your name!"),
@@ -56,7 +57,7 @@ const page = () => {
             storeUserInfo({ accessToken: res.data.accessToken });
           }
           toast.success("Patient registration successfully!");
-          router.push("/");
+          router.push(`/dashboard`);
         } else {
           toast.error(res.message);
         }

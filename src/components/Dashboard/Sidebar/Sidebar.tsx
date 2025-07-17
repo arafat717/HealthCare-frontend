@@ -8,41 +8,22 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import MailIcon from "@mui/icons-material/Mail";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import Image from "next/image";
 import assets from "@/assets";
+import { drawerItems } from "@/utils/drawerItems";
+import { UserRole } from "@/types";
+import SidebarItems from "./SidebarItems";
+import { getUserInfo } from "@/services/actions/authService";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
-  const drawer = (
-    <div>
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  const [userRole, setUserRole] = useState("");
+  console.log(userRole);
+
+  useEffect(() => {
+    const role = getUserInfo();
+    setUserRole(role.role);
+  }, []);
 
   return (
     <div>
@@ -57,7 +38,11 @@ const Sidebar = () => {
           Health Care
         </Typography>
       </Stack>
-      {drawer}
+      <List>
+        {drawerItems(userRole as UserRole).map((item, index) => (
+          <SidebarItems key={index} item={item} index={index}></SidebarItems>
+        ))}
+      </List>
     </div>
   );
 };
