@@ -7,7 +7,7 @@ type THIputProps = {
   size?: "small" | "medium";
   label: string;
   type?: string;
-  fullWidth: boolean;
+  fullWidth?: boolean;
   sx?: SxProps;
   placeholder?: string;
   required?: boolean;

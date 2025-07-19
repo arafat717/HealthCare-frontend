@@ -9,7 +9,6 @@ const Specialist = async () => {
     },
   });
   const { data: specialties } = await res.json();
-  //   console.log(specialties);
 
   return (
     <Container>
@@ -32,7 +31,7 @@ const Specialist = async () => {
           </Typography>
         </Box>
         <Stack direction="row" gap={4} mt={5}>
-          {specialties.slice(5, 10).map((specialty: any) => (
+          {specialties.slice(5, 11).map((specialty: any) => (
             <Box
               key={specialty.id}
               sx={{

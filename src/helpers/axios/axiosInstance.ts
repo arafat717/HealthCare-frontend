@@ -1,5 +1,5 @@
 import { authKey } from "@/constants/authKey";
-import { TResponseData } from "@/types";
+import { IGenericErrorResponse, TResponseData } from "@/types";
 import { getAccessToken } from "@/utils/local-storage";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ instance.defaults.headers.post["Content-Type"] = "application/json";
 instance.defaults.headers["Accept"] = "application/json";
 instance.defaults.timeout = 60000;
 
-axios.interceptors.request.use(
+instance.interceptors.request.use(
   function (config) {
     // Do something before request is sent
     const accessToken = getAccessToken(authKey);
@@ -24,7 +24,7 @@ axios.interceptors.request.use(
 );
 
 // Add a response interceptor
-axios.interceptors.response.use(
+instance.interceptors.response.use(
   //@ts-ignore
   function (response) {
     const responeData: TResponseData = {
@@ -34,7 +34,7 @@ axios.interceptors.response.use(
     return responeData;
   },
   function (error) {
-    const responeObject = {
+    const responeObject: IGenericErrorResponse = {
       statusCode: error?.response?.data?.statusCode || 500,
       message: error?.response?.data?.message || "Something went wrong!!!",
       errorMessages: error?.response?.data?.message,
