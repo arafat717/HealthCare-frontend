@@ -8,7 +8,6 @@ import { Input } from "@mui/material";
 
 type THFileProps = {
   name: string;
-  label: string;
   title: string;
 };
 
@@ -24,7 +23,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function HFileUploader({ name, label, title }: THFileProps) {
+export default function HFileUploader({ name, title }: THFileProps) {
   const { control } = useFormContext();
   return (
     <Controller
