@@ -16,11 +16,21 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { GridDeleteIcon } from "@mui/x-data-grid";
 import { toast } from "sonner";
+import { useDebounced } from "@/redux/Hooks";
 
 const DoctorsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { data, isLoading } = useGetAllDoctorsQuery({});
-  console.log(data);
+  const query: Record<string, any> = {};
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const debouncedTerm = useDebounced({
+    searchTerm: searchTerm,
+    delay: 600,
+  });
+  if (!!debouncedTerm) {
+    query["searchTerm"] = searchTerm;
+  }
+
+  const { data, isLoading } = useGetAllDoctorsQuery({ ...query });
   const doctors = data?.doctors;
   const meta = data?.meta;
 
@@ -40,8 +50,6 @@ const DoctorsPage = () => {
   const columns: GridColDef[] = [
     {
       field: "name",
-      headerAlign: "center",
-      align: "center",
       headerName: "Title",
       flex: 1,
     },
@@ -80,11 +88,17 @@ const DoctorsPage = () => {
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Button onClick={() => setIsModalOpen(true)}>Create New Doctor</Button>
         <DoctorModal open={isModalOpen} setOpen={setIsModalOpen} />
-        <TextField size="small" placeholder="search doctors" />
+        <TextField
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          size="small"
+          placeholder="search doctors"
+        />
       </Stack>
       {!isLoading ? (
         <Box>
-          <Paper sx={{ width: "100%", mt: "20px" }}>
+          <Paper sx={{ width: "100%", mt: "20px", boxShadow: "0" }}>
             <DataGrid rows={doctors} columns={columns} sx={{ border: 0 }} />
           </Paper>
         </Box>

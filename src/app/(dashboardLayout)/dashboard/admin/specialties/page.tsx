@@ -90,7 +90,7 @@ const Specilties = () => {
       </Stack>
       {!isLoading ? (
         <Box>
-          <Paper sx={{ width: "100%", mt: "20px" }}>
+          <Paper sx={{ width: "100%", mt: "20px", boxShadow: "0" }}>
             <DataGrid rows={data} columns={columns} sx={{ border: 0 }} />
           </Paper>
         </Box>
